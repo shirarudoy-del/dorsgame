@@ -1,0 +1,5078 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STAR CLASH</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    user-select:none;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    overflow:hidden;
+    background:#10152c;
+    color:white;
+}
+
+button{
+    font-family:inherit;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+#gameApp{
+    width:100vw;
+    height:100vh;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 20% 20%,#4056d8,transparent 30%),
+        radial-gradient(circle at 80% 30%,#a23dd8,transparent 30%),
+        linear-gradient(#1a2352,#10152c);
+}
+
+/* =========================
+   HOME SCREEN
+========================= */
+
+#homeScreen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+}
+
+.topBar{
+    height:85px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 25px;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(8px);
+    border-bottom:2px solid rgba(255,255,255,.1);
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.avatar{
+    width:58px;
+    height:58px;
+    border-radius:15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+    background:linear-gradient(135deg,#ffcc4d,#ff7e47);
+    border:3px solid white;
+}
+
+.playerName{
+    font-weight:bold;
+    font-size:19px;
+}
+
+.levelText{
+    color:#8de1ff;
+    font-size:13px;
+}
+
+.currencyBar{
+    display:flex;
+    gap:15px;
+}
+
+.currency{
+    padding:10px 16px;
+    border-radius:13px;
+    font-weight:bold;
+    background:#161b35;
+    border:2px solid rgba(255,255,255,.15);
+    min-width:90px;
+    text-align:center;
+}
+
+.coins{
+    color:#ffd84d;
+}
+
+.gems{
+    color:#7dffce;
+}
+
+.trophies{
+    color:#ff9d46;
+}
+
+/* =========================
+ MAIN HOME
+========================= */
+
+.homeMain{
+    flex:1;
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.characterPlatform{
+    position:absolute;
+    width:420px;
+    height:180px;
+    bottom:90px;
+    border-radius:50%;
+    background:radial-gradient(ellipse,#51a9ff,transparent 65%);
+    filter:blur(2px);
+}
+
+.selectedCharacter{
+    position:relative;
+    z-index:3;
+    text-align:center;
+    animation:floatCharacter 2.6s ease-in-out infinite;
+}
+
+@keyframes floatCharacter{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+}
+
+.charEmoji{
+    font-size:145px;
+    filter:drop-shadow(0 15px 9px rgba(0,0,0,.45));
+}
+
+.charName{
+    font-size:35px;
+    font-weight:900;
+    text-shadow:0 3px 0 #000;
+}
+
+.charStats{
+    margin-top:8px;
+    background:rgba(0,0,0,.35);
+    padding:8px 18px;
+    border-radius:15px;
+}
+
+.leftMenu,
+.rightMenu{
+    position:absolute;
+    top:120px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.leftMenu{
+    left:18px;
+}
+
+.rightMenu{
+    right:18px;
+}
+
+.menuButton{
+    width:120px;
+    height:70px;
+    border:0;
+    border-radius:16px;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 6px 0 rgba(0,0,0,.3);
+    transition:.15s;
+}
+
+.menuButton:hover{
+    transform:translateY(-3px);
+}
+
+.menuButton:active{
+    transform:translateY(3px);
+    box-shadow:0 2px 0 rgba(0,0,0,.3);
+}
+
+.brawlersBtn{
+    background:#ff9f2f;
+}
+
+.shopBtn{
+    background:#44bd65;
+}
+
+.rewardBtn{
+    background:#8c5cff;
+}
+
+.questsBtn{
+    background:#e84fa5;
+}
+
+.settingsBtn{
+    background:#4da1ff;
+}
+
+.playArea{
+    position:absolute;
+    bottom:25px;
+    width:100%;
+    padding:0 30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.playButton{
+    width:300px;
+    height:85px;
+    border-radius:20px;
+    border:4px solid white;
+    background:linear-gradient(#ffdb4a,#ff8f27);
+    color:#301600;
+    font-size:32px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 9px 0 #b54717;
+}
+
+.playButton:active{
+    transform:translateY(6px);
+    box-shadow:0 3px 0 #b54717;
+}
+
+/* =========================
+ MODALS
+========================= */
+
+.modal{
+    position:absolute;
+    inset:0;
+    z-index:50;
+    background:rgba(5,9,25,.88);
+    backdrop-filter:blur(8px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.modalBox{
+    width:min(1100px,94vw);
+    height:min(700px,90vh);
+    border-radius:25px;
+    background:#202a58;
+    border:4px solid #6887ff;
+    box-shadow:0 15px 60px rgba(0,0,0,.5);
+    overflow:hidden;
+    position:relative;
+}
+
+.modalHeader{
+    height:80px;
+    background:#334199;
+    padding:17px 25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:28px;
+    font-weight:900;
+}
+
+.closeBtn{
+    border:0;
+    width:48px;
+    height:48px;
+    border-radius:13px;
+    background:#e84a55;
+    color:white;
+    font-size:25px;
+    cursor:pointer;
+}
+
+.modalContent{
+    height:calc(100% - 80px);
+    overflow-y:auto;
+    padding:25px;
+}
+
+/* =========================
+ CHARACTER GRID
+========================= */
+
+.characterGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+    gap:18px;
+}
+
+.characterCard{
+    background:#2c3976;
+    border-radius:20px;
+    overflow:hidden;
+    cursor:pointer;
+    border:4px solid transparent;
+    transition:.2s;
+    box-shadow:0 6px 0 rgba(0,0,0,.25);
+}
+
+.characterCard:hover{
+    transform:translateY(-5px);
+}
+
+.characterCard.selected{
+    border-color:#ffe84c;
+}
+
+.characterCard.locked{
+    filter:grayscale(.85);
+    opacity:.65;
+}
+
+.characterPortrait{
+    height:140px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:80px;
+    background:linear-gradient(135deg,#4d65d9,#814fc1);
+}
+
+.characterInfo{
+    padding:12px;
+}
+
+.characterInfo h3{
+    font-size:21px;
+}
+
+.rarity{
+    font-size:13px;
+    margin-top:3px;
+}
+
+.common{
+    color:#aaffaa;
+}
+
+.rare{
+    color:#60d4ff;
+}
+
+.epic{
+    color:#dc72ff;
+}
+
+.legendary{
+    color:#ffca43;
+}
+
+.progressBar{
+    height:9px;
+    background:#111630;
+    border-radius:8px;
+    margin-top:10px;
+    overflow:hidden;
+}
+
+.progressFill{
+    height:100%;
+    background:#ffd948;
+}
+
+.cardButton{
+    width:100%;
+    margin-top:10px;
+    padding:9px;
+    border:0;
+    border-radius:10px;
+    background:#43d36d;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* =========================
+ SHOP
+========================= */
+
+.shopSection{
+    margin-bottom:30px;
+}
+
+.shopSection h2{
+    margin-bottom:15px;
+}
+
+.shopGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:18px;
+}
+
+.shopCard{
+    padding:20px;
+    border-radius:20px;
+    background:#303b78;
+    text-align:center;
+}
+
+.shopIcon{
+    font-size:70px;
+}
+
+.shopPrice{
+    margin-top:10px;
+    color:#ffe453;
+    font-weight:bold;
+}
+
+.shopBuy{
+    margin-top:15px;
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:13px;
+    background:#35c95f;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* =========================
+ STAR DROP
+========================= */
+
+.dropScreen{
+    text-align:center;
+}
+
+.dropTitle{
+    font-size:35px;
+    font-weight:900;
+}
+
+.starDrop{
+    margin:40px auto 20px;
+    width:210px;
+    height:210px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:150px;
+    cursor:pointer;
+    animation:starPulse 1s infinite alternate;
+}
+
+@keyframes starPulse{
+    from{transform:scale(1) rotate(-4deg)}
+    to{transform:scale(1.1) rotate(4deg)}
+}
+
+.dropRarity{
+    font-size:35px;
+    font-weight:900;
+}
+
+.tapText{
+    margin-top:20px;
+    color:#afd6ff;
+}
+
+.rewardResult{
+    margin-top:30px;
+    font-size:25px;
+    font-weight:bold;
+}
+
+/* =========================
+ QUEST
+========================= */
+
+.quest{
+    display:flex;
+    gap:15px;
+    align-items:center;
+    padding:18px;
+    border-radius:18px;
+    background:#2e3976;
+    margin-bottom:15px;
+}
+
+.questIcon{
+    font-size:40px;
+}
+
+.questInfo{
+    flex:1;
+}
+
+.questReward{
+    color:#ffd24b;
+    font-weight:bold;
+}
+
+/* =========================
+ GAME SCREEN
+========================= */
+
+#battleScreen{
+    position:absolute;
+    inset:0;
+    background:#1d7a54;
+}
+
+#gameCanvas{
+    width:100%;
+    height:100%;
+    display:block;
+    background:#257f59;
+}
+
+.battleUI{
+    pointer-events:none;
+    position:absolute;
+    inset:0;
+}
+
+.battleTop{
+    position:absolute;
+    top:15px;
+    left:20px;
+    right:20px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.scoreBox{
+    background:rgba(0,0,0,.5);
+    padding:10px 18px;
+    border-radius:15px;
+    font-weight:bold;
+}
+
+.exitBattle{
+    pointer-events:auto;
+    border:0;
+    border-radius:12px;
+    background:#e84a55;
+    color:white;
+    padding:12px 18px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.controlsHelp{
+    position:absolute;
+    bottom:15px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,.5);
+    padding:10px 18px;
+    border-radius:14px;
+    font-size:13px;
+}
+
+.superButton{
+    pointer-events:auto;
+    position:absolute;
+    right:28px;
+    bottom:35px;
+    width:95px;
+    height:95px;
+    border-radius:50%;
+    border:5px solid white;
+    background:#ffba25;
+    color:#311c00;
+    font-size:20px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.superButton.ready{
+    animation:superReady .5s infinite alternate;
+}
+
+@keyframes superReady{
+    from{transform:scale(1)}
+    to{transform:scale(1.12)}
+}
+
+/* =========================
+ SKINS
+========================= */
+
+.skinGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    gap:18px;
+}
+
+.skinCard{
+    background:#2c3976;
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+}
+
+.skinPreview{
+    font-size:80px;
+    margin-bottom:10px;
+}
+
+.skinOwned{
+    color:#59ff8c;
+}
+
+/* =========================
+ LEVEL
+========================= */
+
+.levelBanner{
+    padding:15px 25px;
+    background:#121832;
+}
+
+.bigXPBar{
+    height:20px;
+    border-radius:10px;
+    background:#080b18;
+    overflow:hidden;
+}
+
+.bigXPFill{
+    height:100%;
+    background:linear-gradient(90deg,#4bdcff,#7868ff);
+}
+
+/* =========================
+ RESPONSIVE
+========================= */
+
+@media(max-width:700px){
+
+    .topBar{
+        padding:8px;
+    }
+
+    .currency{
+        min-width:auto;
+        padding:8px;
+    }
+
+    .leftMenu,
+    .rightMenu{
+        top:100px;
+    }
+
+    .menuButton{
+        width:85px;
+        height:60px;
+        font-size:12px;
+    }
+
+    .charEmoji{
+        font-size:105px;
+    }
+
+    .charName{
+        font-size:27px;
+    }
+
+    .playButton{
+        width:220px;
+        height:70px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="gameApp">
+
+<!-- =============================================
+HOME
+============================================= -->
+
+<div id="homeScreen">
+
+    <div class="topBar">
+
+        <div class="profile">
+
+            <div class="avatar">😎</div>
+
+            <div>
+                <div class="playerName">STAR PLAYER</div>
+                <div class="levelText" id="playerLevelText">
+                    LEVEL 1
+                </div>
+            </div>
+
+        </div>
+
+        <div class="currencyBar">
+
+            <div class="currency trophies">
+                🏆 <span id="trophyText">0</span>
+            </div>
+
+            <div class="currency coins">
+                🪙 <span id="coinText">500</span>
+            </div>
+
+            <div class="currency gems">
+                💎 <span id="gemText">20</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="levelBanner">
+
+        <div class="bigXPBar">
+            <div class="bigXPFill" id="xpBar"></div>
+        </div>
+
+    </div>
+
+    <div class="homeMain">
+
+        <div class="characterPlatform"></div>
+
+        <div class="selectedCharacter">
+
+            <div
+                class="charEmoji"
+                id="homeCharacterEmoji">
+                🤠
+            </div>
+
+            <div
+                class="charName"
+                id="homeCharacterName">
+                REX
+            </div>
+
+            <div class="charStats">
+
+                🏆
+                <span id="homeCharacterTrophies">0</span>
+
+                &nbsp; | &nbsp;
+
+                ⚡ POWER
+                <span id="homeCharacterPower">1</span>
+
+            </div>
+
+        </div>
+
+        <div class="leftMenu">
+
+            <button
+                class="menuButton brawlersBtn"
+                onclick="openCharacterMenu()">
+                👥
+                <br>
+                HEROES
+            </button>
+
+            <button
+                class="menuButton shopBtn"
+                onclick="openShop()">
+                🛒
+                <br>
+                SHOP
+            </button>
+
+            <button
+                class="menuButton rewardBtn"
+                onclick="openDropMenu()">
+                ⭐
+                <br>
+                STAR DROPS
+            </button>
+
+        </div>
+
+        <div class="rightMenu">
+
+            <button
+                class="menuButton questsBtn"
+                onclick="openQuests()">
+                📜
+                <br>
+                QUESTS
+            </button>
+
+            <button
+                class="menuButton settingsBtn"
+                onclick="openSkins()">
+                🎨
+                <br>
+                SKINS
+            </button>
+
+        </div>
+
+        <div class="playArea">
+
+            <button
+                class="playButton"
+                onclick="startBattle()">
+
+                ⚔ PLAY
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =============================================
+CHARACTER MODAL
+============================================= -->
+
+<div id="characterModal" class="modal hidden">
+
+    <div class="modalBox">
+
+        <div class="modalHeader">
+
+            HEROES
+
+            <button
+                class="closeBtn"
+                onclick="closeModal('characterModal')">
+                ✕
+            </button>
+
+        </div>
+
+        <div
+            class="modalContent characterGrid"
+            id="characterGrid">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =============================================
+SHOP MODAL
+============================================= -->
+
+<div id="shopModal" class="modal hidden">
+
+    <div class="modalBox">
+
+        <div class="modalHeader">
+
+            SHOP
+
+            <button
+                class="closeBtn"
+                onclick="closeModal('shopModal')">
+                ✕
+            </button>
+
+        </div>
+
+        <div
+            class="modalContent"
+            id="shopContent">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =============================================
+DROP MODAL
+============================================= -->
+
+<div id="dropModal" class="modal hidden">
+
+    <div class="modalBox">
+
+        <div class="modalHeader">
+
+            STAR DROP
+
+            <button
+                class="closeBtn"
+                onclick="closeModal('dropModal')">
+                ✕
+            </button>
+
+        </div>
+
+        <div class="modalContent dropScreen">
+
+            <div class="dropTitle">
+                YOUR STAR DROPS
+            </div>
+
+            <div style="margin-top:10px">
+                Available:
+                <strong id="dropCount">
+                    0
+                </strong>
+            </div>
+
+            <div
+                class="starDrop"
+                id="starDrop"
+                onclick="openStarDrop()">
+                ⭐
+            </div>
+
+            <div
+                class="dropRarity"
+                id="dropRarity">
+                TAP TO OPEN
+            </div>
+
+            <div class="tapText">
+                Tap the star to reveal your reward!
+            </div>
+
+            <div
+                class="rewardResult"
+                id="rewardResult">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =============================================
+QUEST MODAL
+============================================= -->
+
+<div id="questModal" class="modal hidden">
+
+    <div class="modalBox">
+
+        <div class="modalHeader">
+
+            QUESTS
+
+            <button
+                class="closeBtn"
+                onclick="closeModal('questModal')">
+                ✕
+            </button>
+
+        </div>
+
+        <div
+            class="modalContent"
+            id="questContent">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =============================================
+SKIN MODAL
+============================================= -->
+
+<div id="skinModal" class="modal hidden">
+
+    <div class="modalBox">
+
+        <div class="modalHeader">
+
+            SKINS
+
+            <button
+                class="closeBtn"
+                onclick="closeModal('skinModal')">
+                ✕
+            </button>
+
+        </div>
+
+        <div
+            class="modalContent skinGrid"
+            id="skinGrid">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =============================================
+BATTLE
+============================================= -->
+
+<div
+    id="battleScreen"
+    class="hidden">
+
+    <canvas
+        id="gameCanvas">
+    </canvas>
+
+    <div class="battleUI">
+
+        <div class="battleTop">
+
+            <div
+                class="scoreBox"
+                id="battleScore">
+
+                💀 0
+                &nbsp;
+                🏆 0
+
+            </div>
+
+            <button
+                class="exitBattle"
+                onclick="endBattle()">
+
+                EXIT
+
+            </button>
+
+        </div>
+
+        <div class="controlsHelp">
+
+            WASD / ARROWS = MOVE
+            &nbsp; • &nbsp;
+            MOUSE = AIM
+            &nbsp; • &nbsp;
+            CLICK = SHOOT
+            &nbsp; • &nbsp;
+            SPACE = SUPER
+
+        </div>
+
+        <button
+            id="superButton"
+            class="superButton"
+            onclick="useSuper()">
+
+            SUPER
+            <br>
+            0%
+
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+/* ==================================================
+PLAYER DATA
+================================================== */
+
+const SAVE_KEY = "starClashSaveV1";
+
+let playerData = {
+
+    coins:500,
+
+    gems:20,
+
+    trophies:0,
+
+    xp:0,
+
+    level:1,
+
+    drops:3,
+
+    selectedCharacter:"rex",
+
+    characters:{},
+
+    skinsOwned:["rex_default"],
+
+    quests:{
+        play3:0,
+        kill10:0,
+        win1:0
+    }
+
+};
+
+
+/* ==================================================
+CHARACTER DATABASE
+================================================== */
+
+const characters = [
+
+{
+    id:"rex",
+    name:"REX",
+    emoji:"🤠",
+    rarity:"common",
+
+    hp:3400,
+    damage:520,
+    speed:3.8,
+    fireRate:430,
+
+    description:
+    "Fast gunslinger with rapid energy shots.",
+
+    unlock:0
+},
+
+{
+    id:"nova",
+    name:"NOVA",
+    emoji:"🧑‍🚀",
+    rarity:"common",
+
+    hp:3700,
+    damage:610,
+    speed:3.5,
+    fireRate:520,
+
+    description:
+    "Space explorer firing plasma bolts.",
+
+    unlock:0
+},
+
+{
+    id:"bolt",
+    name:"BOLT",
+    emoji:"🤖",
+    rarity:"rare",
+
+    hp:4200,
+    damage:690,
+    speed:3.2,
+    fireRate:600,
+
+    description:
+    "Heavy robot with powerful electric attacks.",
+
+    unlock:150
+},
+
+{
+    id:"luna",
+    name:"LUNA",
+    emoji:"🧙‍♀️",
+    rarity:"rare",
+
+    hp:3100,
+    damage:790,
+    speed:3.9,
+    fireRate:680,
+
+    description:
+    "Moon mage who deals high burst damage.",
+
+    unlock:300
+},
+
+{
+    id:"blade",
+    name:"BLADE",
+    emoji:"🥷",
+    rarity:"epic",
+
+    hp:3900,
+    damage:850,
+    speed:4.5,
+    fireRate:700,
+
+    description:
+    "Extremely fast close-range assassin.",
+
+    unlock:600
+},
+
+{
+    id:"ember",
+    name:"EMBER",
+    emoji:"🔥",
+    rarity:"epic",
+
+    hp:3500,
+    damage:920,
+    speed:3.7,
+    fireRate:760,
+
+    description:
+    "Shoots destructive fire blasts.",
+
+    unlock:900
+},
+
+{
+    id:"ivy",
+    name:"IVY",
+    emoji:"🌿",
+    rarity:"epic",
+
+    hp:4000,
+    damage:700,
+    speed:3.6,
+    fireRate:580,
+
+    description:
+    "Nature fighter with healing powers.",
+
+    unlock:1200
+},
+
+{
+    id:"phantom",
+    name:"PHANTOM",
+    emoji:"👻",
+    rarity:"legendary",
+
+    hp:3300,
+    damage:1050,
+    speed:4.3,
+    fireRate:800,
+
+    description:
+    "Ghost warrior who hits incredibly hard.",
+
+    unlock:1800
+},
+
+{
+    id:"titan",
+    name:"TITAN",
+    emoji:"🦾",
+    rarity:"legendary",
+
+    hp:5700,
+    damage:850,
+    speed:2.9,
+    fireRate:750,
+
+    description:
+    "Massive tank with incredible health.",
+
+    unlock:2500
+},
+
+{
+    id:"storm",
+    name:"STORM",
+    emoji:"⚡",
+    rarity:"legendary",
+
+    hp:3600,
+    damage:1150,
+    speed:4.1,
+    fireRate:850,
+
+    description:
+    "Legendary warrior controlling lightning.",
+
+    unlock:3500
+}
+
+];
+
+
+/* ==================================================
+SKIN DATABASE
+================================================== */
+
+const skins = [
+
+{
+    id:"rex_default",
+    character:"rex",
+    name:"Classic Rex",
+    emoji:"🤠",
+    price:0
+},
+
+{
+    id:"rex_space",
+    character:"rex",
+    name:"Galaxy Rex",
+    emoji:"👨‍🚀",
+    price:80
+},
+
+{
+    id:"rex_king",
+    character:"rex",
+    name:"King Rex",
+    emoji:"🤴",
+    price:120
+},
+
+{
+    id:"nova_default",
+    character:"nova",
+    name:"Classic Nova",
+    emoji:"🧑‍🚀",
+    price:0
+},
+
+{
+    id:"nova_alien",
+    character:"nova",
+    name:"Alien Nova",
+    emoji:"👽",
+    price:100
+},
+
+{
+    id:"bolt_default",
+    character:"bolt",
+    name:"Classic Bolt",
+    emoji:"🤖",
+    price:0
+},
+
+{
+    id:"bolt_gold",
+    character:"bolt",
+    name:"Golden Bolt",
+    emoji:"🦾",
+    price:150
+},
+
+{
+    id:"luna_default",
+    character:"luna",
+    name:"Classic Luna",
+    emoji:"🧙‍♀️",
+    price:0
+},
+
+{
+    id:"luna_queen",
+    character:"luna",
+    name:"Queen Luna",
+    emoji:"👸",
+    price:140
+},
+
+{
+    id:"blade_default",
+    character:"blade",
+    name:"Classic Blade",
+    emoji:"🥷",
+    price:0
+},
+
+{
+    id:"ember_default",
+    character:"ember",
+    name:"Classic Ember",
+    emoji:"🔥",
+    price:0
+},
+
+{
+    id:"phantom_default",
+    character:"phantom",
+    name:"Classic Phantom",
+    emoji:"👻",
+    price:0
+}
+
+];
+
+
+/* ==================================================
+INITIALIZE CHARACTERS
+================================================== */
+
+characters.forEach(c=>{
+
+    if(!playerData.characters[c.id]){
+
+        playerData.characters[c.id]={
+
+            unlocked:
+                c.unlock===0,
+
+            power:1,
+
+            trophies:0,
+
+            skin:
+                c.id+"_default"
+
+        };
+
+    }
+
+});
+
+
+/* ==================================================
+SAVE / LOAD
+================================================== */
+
+function saveGame(){
+
+    localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify(playerData)
+    );
+
+}
+
+
+function loadGame(){
+
+    const saved =
+        localStorage.getItem(SAVE_KEY);
+
+    if(saved){
+
+        try{
+
+            const parsed=
+                JSON.parse(saved);
+
+            playerData=
+                Object.assign(
+                    playerData,
+                    parsed
+                );
+
+        }catch(e){
+
+            console.log(
+                "Save could not load."
+            );
+
+        }
+
+    }
+
+    characters.forEach(c=>{
+
+        if(
+            !playerData.characters[c.id]
+        ){
+
+            playerData.characters[c.id]={
+                unlocked:c.unlock===0,
+                power:1,
+                trophies:0,
+                skin:c.id+"_default"
+            };
+
+        }
+
+    });
+
+}
+
+
+/* ==================================================
+HOME UPDATE
+================================================== */
+
+function updateHome(){
+
+    document.getElementById(
+        "coinText"
+    ).textContent=
+        playerData.coins;
+
+    document.getElementById(
+        "gemText"
+    ).textContent=
+        playerData.gems;
+
+    document.getElementById(
+        "trophyText"
+    ).textContent=
+        playerData.trophies;
+
+    document.getElementById(
+        "playerLevelText"
+    ).textContent=
+        "LEVEL "+playerData.level;
+
+
+    let xpNeeded=
+        playerData.level*100;
+
+    let xpPercent=
+        Math.min(
+            100,
+            (playerData.xp/xpNeeded)*100
+        );
+
+    document.getElementById(
+        "xpBar"
+    ).style.width=
+        xpPercent+"%";
+
+
+    const character=
+        characters.find(
+            x=>
+            x.id===
+            playerData.selectedCharacter
+        );
+
+
+    const info=
+        playerData.characters[
+            character.id
+        ];
+
+
+    let skin=
+        skins.find(
+            s=>
+            s.id===info.skin
+        );
+
+
+    document.getElementById(
+        "homeCharacterEmoji"
+    ).textContent=
+        skin
+        ? skin.emoji
+        : character.emoji;
+
+
+    document.getElementById(
+        "homeCharacterName"
+    ).textContent=
+        character.name;
+
+
+    document.getElementById(
+        "homeCharacterTrophies"
+    ).textContent=
+        info.trophies;
+
+
+    document.getElementById(
+        "homeCharacterPower"
+    ).textContent=
+        info.power;
+
+
+    unlockTrophyCharacters();
+
+    saveGame();
+
+}
+
+
+/* ==================================================
+LEVEL SYSTEM
+================================================== */
+
+function addXP(amount){
+
+    playerData.xp+=amount;
+
+    while(
+        playerData.xp >=
+        playerData.level*100
+    ){
+
+        playerData.xp -=
+            playerData.level*100;
+
+        playerData.level++;
+
+        playerData.coins+=100;
+
+        playerData.drops++;
+
+        showToast(
+            "LEVEL UP! 🎉 Level "+
+            playerData.level
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+TROPHY UNLOCKS
+================================================== */
+
+function unlockTrophyCharacters(){
+
+    characters.forEach(c=>{
+
+        if(
+            !playerData.characters[c.id]
+                .unlocked
+            &&
+            playerData.trophies>=c.unlock
+        ){
+
+            playerData.characters[c.id]
+                .unlocked=true;
+
+            playerData.drops++;
+
+            showToast(
+                "NEW HERO UNLOCKED: "+
+                c.name+"!"
+            );
+
+        }
+
+    });
+
+}
+
+
+/* ==================================================
+MODALS
+================================================== */
+
+function closeModal(id){
+
+    document
+        .getElementById(id)
+        .classList.add("hidden");
+
+}
+
+
+/* ==================================================
+CHARACTER MENU
+================================================== */
+
+function openCharacterMenu(){
+
+    renderCharacterGrid();
+
+    document
+        .getElementById(
+            "characterModal"
+        )
+        .classList.remove("hidden");
+
+}
+
+
+function renderCharacterGrid(){
+
+    const grid=
+        document.getElementById(
+            "characterGrid"
+        );
+
+    grid.innerHTML="";
+
+
+    characters.forEach(character=>{
+
+        const info=
+            playerData.characters[
+                character.id
+            ];
+
+        const card=
+            document.createElement(
+                "div"
+            );
+
+        card.className=
+            "characterCard";
+
+
+        if(
+            character.id===
+            playerData.selectedCharacter
+        ){
+
+            card.classList.add(
+                "selected"
+            );
+
+        }
+
+
+        if(!info.unlocked){
+
+            card.classList.add(
+                "locked"
+            );
+
+        }
+
+
+        const upgradeCost=
+            info.power*150;
+
+
+        card.innerHTML=`
+
+        <div class="characterPortrait">
+
+            ${
+                info.unlocked
+                ? character.emoji
+                : "🔒"
+            }
+
+        </div>
+
+        <div class="characterInfo">
+
+            <h3>
+                ${character.name}
+            </h3>
+
+            <div
+                class="rarity ${character.rarity}">
+
+                ${character.rarity.toUpperCase()}
+
+            </div>
+
+            <div style="font-size:12px;margin-top:5px">
+
+                ${character.description}
+
+            </div>
+
+            <div style="margin-top:8px">
+
+                ⚡ Power ${info.power}
+
+            </div>
+
+            <div>
+
+                🏆 ${info.trophies}
+
+            </div>
+
+            ${
+                !info.unlocked
+                ?
+                `
+                <div style="margin-top:10px">
+
+                    Unlock at
+                    🏆 ${character.unlock}
+
+                </div>
+                `
+                :
+                `
+                <button
+                    class="cardButton"
+                    onclick="
+                        selectCharacter(
+                            '${character.id}'
+                        );
+                        event.stopPropagation();
+                    ">
+
+                    SELECT
+
+                </button>
+
+                ${
+                    info.power<10
+                    ?
+                    `
+                    <button
+                        class="cardButton"
+                        style="background:#d78c29"
+                        onclick="
+                            upgradeCharacter(
+                                '${character.id}'
+                            );
+                            event.stopPropagation();
+                        ">
+
+                        UPGRADE
+                        🪙 ${upgradeCost}
+
+                    </button>
+                    `
+                    :
+                    `
+                    <div
+                        style="
+                        text-align:center;
+                        margin-top:8px;
+                        color:#ffeb5a;
+                        font-weight:bold">
+
+                        MAX POWER
+
+                    </div>
+                    `
+                }
+
+                `
+            }
+
+        </div>
+
+        `;
+
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+
+/* ==================================================
+SELECT CHARACTER
+================================================== */
+
+function selectCharacter(id){
+
+    const info=
+        playerData.characters[id];
+
+    if(!info.unlocked){
+
+        showToast(
+            "This hero is locked!"
+        );
+
+        return;
+
+    }
+
+    playerData.selectedCharacter=id;
+
+    saveGame();
+
+    updateHome();
+
+    renderCharacterGrid();
+
+}
+
+
+/* ==================================================
+UPGRADE
+================================================== */
+
+function upgradeCharacter(id){
+
+    const info=
+        playerData.characters[id];
+
+    const price=
+        info.power*150;
+
+
+    if(info.power>=10){
+
+        showToast(
+            "Already max power!"
+        );
+
+        return;
+
+    }
+
+
+    if(playerData.coins<price){
+
+        showToast(
+            "Not enough coins!"
+        );
+
+        return;
+
+    }
+
+
+    playerData.coins-=price;
+
+    info.power++;
+
+    showToast(
+        "POWER "+info.power+"! ⚡"
+    );
+
+    saveGame();
+
+    updateHome();
+
+    renderCharacterGrid();
+
+}
+
+
+/* ==================================================
+SHOP
+================================================== */
+
+function openShop(){
+
+    renderShop();
+
+    document
+        .getElementById("shopModal")
+        .classList.remove("hidden");
+
+}
+
+
+function renderShop(){
+
+    const container=
+        document.getElementById(
+            "shopContent"
+        );
+
+    container.innerHTML=`
+
+    <div class="shopSection">
+
+        <h2>DAILY DEALS</h2>
+
+        <div class="shopGrid">
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🪙
+                </div>
+
+                <h3>
+                    500 Coins
+                </h3>
+
+                <div class="shopPrice">
+                    💎 25
+                </div>
+
+                <button
+                    class="shopBuy"
+                    onclick="buyCoins(500,25)">
+
+                    BUY
+
+                </button>
+
+            </div>
+
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🪙
+                </div>
+
+                <h3>
+                    1,500 Coins
+                </h3>
+
+                <div class="shopPrice">
+                    💎 60
+                </div>
+
+                <button
+                    class="shopBuy"
+                    onclick="buyCoins(1500,60)">
+
+                    BUY
+
+                </button>
+
+            </div>
+
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    ⭐
+                </div>
+
+                <h3>
+                    Star Drop
+                </h3>
+
+                <div class="shopPrice">
+                    💎 15
+                </div>
+
+                <button
+                    class="shopBuy"
+                    onclick="buyDrop()">
+
+                    BUY
+
+                </button>
+
+            </div>
+
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🎁
+                </div>
+
+                <h3>
+                    Mega Pack
+                </h3>
+
+                <div>
+
+                    800 coins
+                    <br>
+                    3 Star Drops
+
+                </div>
+
+                <div class="shopPrice">
+                    💎 55
+                </div>
+
+                <button
+                    class="shopBuy"
+                    onclick="buyMegaPack()">
+
+                    BUY
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="shopSection">
+
+        <h2>FREE REWARD</h2>
+
+        <div class="shopGrid">
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🎁
+                </div>
+
+                <h3>
+                    Daily Gift
+                </h3>
+
+                <div>
+                    50 coins
+                </div>
+
+                <button
+                    class="shopBuy"
+                    onclick="claimDailyGift()">
+
+                    CLAIM
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function buyCoins(
+    amount,
+    gems
+){
+
+    if(
+        playerData.gems<gems
+    ){
+
+        showToast(
+            "Not enough gems!"
+        );
+
+        return;
+
+    }
+
+    playerData.gems-=gems;
+
+    playerData.coins+=amount;
+
+    showToast(
+        "+"+amount+" coins!"
+    );
+
+    updateHome();
+
+}
+
+
+function buyDrop(){
+
+    if(playerData.gems<15){
+
+        showToast(
+            "Not enough gems!"
+        );
+
+        return;
+
+    }
+
+    playerData.gems-=15;
+
+    playerData.drops++;
+
+    showToast(
+        "Star Drop purchased!"
+    );
+
+    updateHome();
+
+}
+
+
+function buyMegaPack(){
+
+    if(playerData.gems<55){
+
+        showToast(
+            "Not enough gems!"
+        );
+
+        return;
+
+    }
+
+    playerData.gems-=55;
+
+    playerData.coins+=800;
+
+    playerData.drops+=3;
+
+    showToast(
+        "Mega Pack opened! 🎁"
+    );
+
+    updateHome();
+
+}
+
+
+/* ==================================================
+DAILY GIFT
+================================================== */
+
+function claimDailyGift(){
+
+    const today=
+        new Date()
+        .toDateString();
+
+    const last=
+        localStorage.getItem(
+            "starClashDaily"
+        );
+
+
+    if(last===today){
+
+        showToast(
+            "Come back tomorrow!"
+        );
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "starClashDaily",
+        today
+    );
+
+    playerData.coins+=50;
+
+    showToast(
+        "+50 FREE COINS!"
+    );
+
+    updateHome();
+
+}
+
+
+/* ==================================================
+STAR DROPS
+================================================== */
+
+function openDropMenu(){
+
+    resetDropScreen();
+
+    document
+        .getElementById("dropModal")
+        .classList.remove("hidden");
+
+}
+
+
+function resetDropScreen(){
+
+    document.getElementById(
+        "dropCount"
+    ).textContent=
+        playerData.drops;
+
+    document.getElementById(
+        "dropRarity"
+    ).textContent=
+        "TAP TO OPEN";
+
+    document.getElementById(
+        "rewardResult"
+    ).textContent="";
+
+    document.getElementById(
+        "starDrop"
+    ).textContent="⭐";
+
+}
+
+
+/* ==================================================
+DROP LOGIC
+================================================== */
+
+function openStarDrop(){
+
+    if(playerData.drops<=0){
+
+        showToast(
+            "You don't have any Star Drops."
+        );
+
+        return;
+
+    }
+
+
+    playerData.drops--;
+
+    const roll=
+        Math.random()*100;
+
+
+    let rarity;
+
+    if(roll<50){
+
+        rarity="COMMON";
+
+    }else if(roll<78){
+
+        rarity="RARE";
+
+    }else if(roll<92){
+
+        rarity="EPIC";
+
+    }else if(roll<98){
+
+        rarity="MYTHIC";
+
+    }else{
+
+        rarity="LEGENDARY";
+
+    }
+
+
+    const rarityElement=
+        document.getElementById(
+            "dropRarity"
+        );
+
+
+    rarityElement.textContent=
+        rarity+"!";
+
+
+    const reward=
+        generateDropReward(
+            rarity
+        );
+
+
+    document.getElementById(
+        "rewardResult"
+    ).innerHTML=
+        reward;
+
+
+    document.getElementById(
+        "dropCount"
+    ).textContent=
+        playerData.drops;
+
+
+    saveGame();
+
+    updateHome();
+
+}
+
+
+/* ==================================================
+DROP REWARDS
+================================================== */
+
+function generateDropReward(
+    rarity
+){
+
+    let coinMin=25;
+
+    let coinMax=50;
+
+    let gemChance=0;
+
+    let heroChance=0;
+
+
+    switch(rarity){
+
+        case "COMMON":
+
+            coinMin=25;
+            coinMax=60;
+            gemChance=2;
+
+        break;
+
+
+        case "RARE":
+
+            coinMin=60;
+            coinMax=130;
+            gemChance=7;
+            heroChance=3;
+
+        break;
+
+
+        case "EPIC":
+
+            coinMin=130;
+            coinMax=280;
+            gemChance=15;
+            heroChance=12;
+
+        break;
+
+
+        case "MYTHIC":
+
+            coinMin=250;
+            coinMax=500;
+            gemChance=30;
+            heroChance=25;
+
+        break;
+
+
+        case "LEGENDARY":
+
+            coinMin=500;
+            coinMax=1000;
+            gemChance=70;
+            heroChance=60;
+
+        break;
+
+    }
+
+
+    const heroRoll=
+        Math.random()*100;
+
+
+    if(heroRoll<heroChance){
+
+        const locked=
+            characters.filter(
+                c=>
+                !playerData
+                .characters[c.id]
+                .unlocked
+            );
+
+
+        if(locked.length){
+
+            const newHero=
+                locked[
+                    Math.floor(
+                        Math.random()*
+                        locked.length
+                    )
+                ];
+
+
+            playerData
+            .characters[
+                newHero.id
+            ]
+            .unlocked=true;
+
+
+            return `
+                🎉 NEW HERO!
+                <br><br>
+
+                <span
+                    style="font-size:70px">
+
+                    ${newHero.emoji}
+
+                </span>
+
+                <br>
+
+                ${newHero.name}
+            `;
+
+        }
+
+    }
+
+
+    const gemRoll=
+        Math.random()*100;
+
+
+    if(gemRoll<gemChance){
+
+        const gems=
+            Math.floor(
+                Math.random()*10
+            )+3;
+
+        playerData.gems+=gems;
+
+        return `
+            💎
+            ${gems}
+            GEMS!
+        `;
+
+    }
+
+
+    const amount=
+        Math.floor(
+            Math.random()*
+            (
+                coinMax-
+                coinMin+
+                1
+            )
+        )
+        +
+        coinMin;
+
+
+    playerData.coins+=amount;
+
+
+    return `
+        🪙
+        ${amount}
+        COINS!
+    `;
+
+}
+
+
+/* ==================================================
+SKINS
+================================================== */
+
+function openSkins(){
+
+    renderSkins();
+
+    document
+        .getElementById(
+            "skinModal"
+        )
+        .classList.remove("hidden");
+
+}
+
+
+function renderSkins(){
+
+    const grid=
+        document.getElementById(
+            "skinGrid"
+        );
+
+    grid.innerHTML="";
+
+
+    skins.forEach(skin=>{
+
+        const hero=
+            playerData.characters[
+                skin.character
+            ];
+
+
+        if(
+            !hero ||
+            !hero.unlocked
+        ){
+
+            return;
+
+        }
+
+
+        const owned=
+            playerData
+            .skinsOwned
+            .includes(
+                skin.id
+            );
+
+
+        const equipped=
+            hero.skin===
+            skin.id;
+
+
+        const card=
+            document.createElement(
+                "div"
+            );
+
+
+        card.className=
+            "skinCard";
+
+
+        card.innerHTML=`
+
+            <div class="skinPreview">
+
+                ${skin.emoji}
+
+            </div>
+
+            <h3>
+                ${skin.name}
+            </h3>
+
+            ${
+                equipped
+                ?
+                `
+                <div
+                    class="skinOwned">
+
+                    EQUIPPED ✓
+
+                </div>
+                `
+                :
+                owned
+                ?
+                `
+                <button
+                    class="shopBuy"
+                    onclick="
+                    equipSkin(
+                        '${skin.id}'
+                    )">
+
+                    EQUIP
+
+                </button>
+                `
+                :
+                `
+                <div
+                    class="shopPrice">
+
+                    💎
+                    ${skin.price}
+
+                </div>
+
+                <button
+                    class="shopBuy"
+                    onclick="
+                    buySkin(
+                        '${skin.id}'
+                    )">
+
+                    BUY
+
+                </button>
+                `
+            }
+
+        `;
+
+
+        grid.appendChild(
+            card
+        );
+
+    });
+
+}
+
+
+/* ==================================================
+BUY SKIN
+================================================== */
+
+function buySkin(id){
+
+    const skin=
+        skins.find(
+            x=>x.id===id
+        );
+
+
+    if(
+        playerData.gems<
+        skin.price
+    ){
+
+        showToast(
+            "Not enough gems!"
+        );
+
+        return;
+
+    }
+
+
+    playerData.gems-=
+        skin.price;
+
+
+    playerData
+        .skinsOwned
+        .push(id);
+
+
+    equipSkin(id);
+
+    showToast(
+        skin.name+
+        " unlocked!"
+    );
+
+}
+
+
+/* ==================================================
+EQUIP SKIN
+================================================== */
+
+function equipSkin(id){
+
+    const skin=
+        skins.find(
+            s=>s.id===id
+        );
+
+
+    playerData
+        .characters[
+            skin.character
+        ]
+        .skin=id;
+
+
+    if(
+        playerData.selectedCharacter===
+        skin.character
+    ){
+
+        updateHome();
+
+    }
+
+
+    saveGame();
+
+    renderSkins();
+
+}
+
+
+/* ==================================================
+QUESTS
+================================================== */
+
+function openQuests(){
+
+    renderQuests();
+
+    document
+        .getElementById(
+            "questModal"
+        )
+        .classList.remove("hidden");
+
+}
+
+
+function renderQuests(){
+
+    const q=
+        playerData.quests;
+
+
+    document.getElementById(
+        "questContent"
+    ).innerHTML=`
+
+        ${questHTML(
+            "⚔️",
+            "Play 3 Battles",
+            q.play3,
+            3,
+            100
+        )}
+
+        ${questHTML(
+            "💀",
+            "Defeat 10 Enemies",
+            q.kill10,
+            10,
+            150
+        )}
+
+        ${questHTML(
+            "🏆",
+            "Win a Battle",
+            q.win1,
+            1,
+            200
+        )}
+
+    `;
+
+}
+
+
+function questHTML(
+    icon,
+    title,
+    current,
+    target,
+    reward
+){
+
+    const done=
+        current>=target;
+
+
+    return `
+
+    <div class="quest">
+
+        <div class="questIcon">
+            ${icon}
+        </div>
+
+        <div class="questInfo">
+
+            <strong>
+                ${title}
+            </strong>
+
+            <div>
+
+                ${Math.min(current,target)}
+                /
+                ${target}
+
+            </div>
+
+            <div class="progressBar">
+
+                <div
+                    class="progressFill"
+                    style="
+                    width:
+                    ${
+                        Math.min(
+                            100,
+                            current/
+                            target*
+                            100
+                        )
+                    }%
+                    ">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="questReward">
+
+            🪙 ${reward}
+
+            <br>
+
+            ${
+                done
+                ? "COMPLETE ✓"
+                : ""
+            }
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+/* ==================================================
+BATTLE VARIABLES
+================================================== */
+
+let canvas;
+
+let ctx;
+
+let running=false;
+
+let lastTime=0;
+
+let keys={};
+
+let mouse={
+    x:0,
+    y:0,
+    down:false
+};
+
+let player;
+
+let enemies=[];
+
+let bullets=[];
+
+let particles=[];
+
+let obstacles=[];
+
+let battleKills=0;
+
+let battleTime=0;
+
+let spawnedEnemies=0;
+
+let maxEnemies=10;
+
+
+/* ==================================================
+START BATTLE
+================================================== */
+
+function startBattle(){
+
+    document
+        .getElementById(
+            "homeScreen"
+        )
+        .classList.add(
+            "hidden"
+        );
+
+
+    document
+        .getElementById(
+            "battleScreen"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
+
+    canvas=
+        document.getElementById(
+            "gameCanvas"
+        );
+
+
+    ctx=
+        canvas.getContext("2d");
+
+
+    resizeCanvas();
+
+
+    const char=
+        characters.find(
+            c=>
+            c.id===
+            playerData.selectedCharacter
+        );
+
+
+    const power=
+        playerData
+        .characters[
+            char.id
+        ]
+        .power;
+
+
+    const multiplier=
+        1+
+        (power-1)*.08;
+
+
+    player={
+
+        x:
+            canvas.width/2,
+
+        y:
+            canvas.height/2,
+
+        radius:23,
+
+        hp:
+            char.hp*
+            multiplier,
+
+        maxHp:
+            char.hp*
+            multiplier,
+
+        damage:
+            char.damage*
+            multiplier,
+
+        speed:
+            char.speed,
+
+        fireRate:
+            char.fireRate,
+
+        lastShot:0,
+
+        superCharge:0,
+
+        invincible:0,
+
+        character:char
+
+    };
+
+
+    enemies=[];
+
+    bullets=[];
+
+    particles=[];
+
+    obstacles=[];
+
+    battleKills=0;
+
+    battleTime=0;
+
+    spawnedEnemies=0;
+
+    running=true;
+
+
+    generateObstacles();
+
+
+    for(let i=0;i<4;i++){
+
+        spawnEnemy();
+
+    }
+
+
+    playerData.quests.play3++;
+
+    updateBattleUI();
+
+
+    lastTime=
+        performance.now();
+
+
+    requestAnimationFrame(
+        battleLoop
+    );
+
+}
+
+
+/* ==================================================
+RESIZE
+================================================== */
+
+function resizeCanvas(){
+
+    if(!canvas)return;
+
+    canvas.width=
+        window.innerWidth;
+
+    canvas.height=
+        window.innerHeight;
+
+}
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* ==================================================
+OBSTACLES
+================================================== */
+
+function generateObstacles(){
+
+    const count=16;
+
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        let width=
+            70+
+            Math.random()*90;
+
+        let height=
+            50+
+            Math.random()*90;
+
+
+        obstacles.push({
+
+            x:
+                80+
+                Math.random()*
+                Math.max(
+                    100,
+                    canvas.width-
+                    width-
+                    160
+                ),
+
+            y:
+                100+
+                Math.random()*
+                Math.max(
+                    100,
+                    canvas.height-
+                    height-
+                    200
+                ),
+
+            width,
+
+            height
+
+        });
+
+    }
+
+}
+
+
+/* ==================================================
+ENEMY SPAWN
+================================================== */
+
+function spawnEnemy(){
+
+    if(
+        spawnedEnemies>=
+        maxEnemies
+    ){
+
+        return;
+
+    }
+
+
+    let x;
+    let y;
+
+
+    const side=
+        Math.floor(
+            Math.random()*4
+        );
+
+
+    if(side===0){
+
+        x=50;
+        y=Math.random()*canvas.height;
+
+    }
+
+    if(side===1){
+
+        x=canvas.width-50;
+        y=Math.random()*canvas.height;
+
+    }
+
+    if(side===2){
+
+        x=Math.random()*canvas.width;
+        y=80;
+
+    }
+
+    if(side===3){
+
+        x=Math.random()*canvas.width;
+        y=canvas.height-80;
+
+    }
+
+
+    const difficulty=
+        1+
+        spawnedEnemies*.07;
+
+
+    enemies.push({
+
+        x,
+        y,
+
+        radius:22,
+
+        hp:
+            1700*
+            difficulty,
+
+        maxHp:
+            1700*
+            difficulty,
+
+        damage:
+            260*
+            difficulty,
+
+        speed:
+            1.5+
+            Math.random()*.6,
+
+        shootCooldown:
+            900+
+            Math.random()*700,
+
+        lastShot:0,
+
+        emoji:
+            [
+                "👾",
+                "🤖",
+                "👹",
+                "💀"
+            ][
+                Math.floor(
+                    Math.random()*4
+                )
+            ]
+
+    });
+
+
+    spawnedEnemies++;
+
+}
+
+
+/* ==================================================
+INPUT
+================================================== */
+
+window.addEventListener(
+    "keydown",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=true;
+
+
+        if(e.code==="Space"){
+
+            useSuper();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=false;
+
+    }
+);
+
+
+window.addEventListener(
+    "mousemove",
+    e=>{
+
+        mouse.x=e.clientX;
+
+        mouse.y=e.clientY;
+
+    }
+);
+
+
+window.addEventListener(
+    "mousedown",
+    ()=>{
+
+        mouse.down=true;
+
+    }
+);
+
+
+window.addEventListener(
+    "mouseup",
+    ()=>{
+
+        mouse.down=false;
+
+    }
+);
+
+
+/* ==================================================
+BATTLE LOOP
+================================================== */
+
+function battleLoop(time){
+
+    if(!running)return;
+
+
+    let delta=
+        Math.min(
+            32,
+            time-lastTime
+        );
+
+
+    lastTime=time;
+
+    battleTime+=delta;
+
+
+    updateBattle(
+        delta,
+        time
+    );
+
+
+    drawBattle();
+
+
+    requestAnimationFrame(
+        battleLoop
+    );
+
+}
+
+
+/* ==================================================
+BATTLE UPDATE
+================================================== */
+
+function updateBattle(
+    delta,
+    time
+){
+
+    updatePlayer(
+        delta,
+        time
+    );
+
+    updateEnemies(
+        delta,
+        time
+    );
+
+    updateBullets(
+        delta
+    );
+
+    updateParticles(
+        delta
+    );
+
+
+    if(
+        enemies.length<4 &&
+        spawnedEnemies<
+        maxEnemies
+    ){
+
+        spawnEnemy();
+
+    }
+
+
+    if(
+        battleKills>=
+        maxEnemies
+    ){
+
+        winBattle();
+
+    }
+
+}
+
+
+/* ==================================================
+PLAYER MOVE
+================================================== */
+
+function updatePlayer(
+    delta,
+    time
+){
+
+    let dx=0;
+    let dy=0;
+
+
+    if(
+        keys["w"]||
+        keys["arrowup"]
+    ){
+
+        dy-=1;
+
+    }
+
+
+    if(
+        keys["s"]||
+        keys["arrowdown"]
+    ){
+
+        dy+=1;
+
+    }
+
+
+    if(
+        keys["a"]||
+        keys["arrowleft"]
+    ){
+
+        dx-=1;
+
+    }
+
+
+    if(
+        keys["d"]||
+        keys["arrowright"]
+    ){
+
+        dx+=1;
+
+    }
+
+
+    const length=
+        Math.hypot(dx,dy);
+
+
+    if(length){
+
+        dx/=length;
+        dy/=length;
+
+
+        const newX=
+            player.x+
+            dx*
+            player.speed*
+            delta*.08;
+
+
+        const newY=
+            player.y+
+            dy*
+            player.speed*
+            delta*.08;
+
+
+        if(
+            !collidesObstacle(
+                newX,
+                player.y,
+                player.radius
+            )
+        ){
+
+            player.x=newX;
+
+        }
+
+
+        if(
+            !collidesObstacle(
+                player.x,
+                newY,
+                player.radius
+            )
+        ){
+
+            player.y=newY;
+
+        }
+
+    }
+
+
+    player.x=
+        Math.max(
+            player.radius,
+            Math.min(
+                canvas.width-
+                player.radius,
+                player.x
+            )
+        );
+
+
+    player.y=
+        Math.max(
+            player.radius,
+            Math.min(
+                canvas.height-
+                player.radius,
+                player.y
+            )
+        );
+
+
+    if(mouse.down){
+
+        shootPlayer(time);
+
+    }
+
+
+    if(player.invincible>0){
+
+        player.invincible-=delta;
+
+    }
+
+}
+
+
+/* ==================================================
+PLAYER SHOOT
+================================================== */
+
+function shootPlayer(
+    time
+){
+
+    if(
+        time-
+        player.lastShot<
+        player.fireRate
+    ){
+
+        return;
+
+    }
+
+
+    player.lastShot=time;
+
+
+    const angle=
+        Math.atan2(
+            mouse.y-player.y,
+            mouse.x-player.x
+        );
+
+
+    bullets.push({
+
+        x:player.x,
+
+        y:player.y,
+
+        vx:
+            Math.cos(angle)*
+            8,
+
+        vy:
+            Math.sin(angle)*
+            8,
+
+        radius:7,
+
+        damage:
+            player.damage,
+
+        friendly:true,
+
+        life:1400
+
+    });
+
+}
+
+
+/* ==================================================
+ENEMY AI
+================================================== */
+
+function updateEnemies(
+    delta,
+    time
+){
+
+    enemies.forEach(enemy=>{
+
+        const angle=
+            Math.atan2(
+                player.y-
+                enemy.y,
+
+                player.x-
+                enemy.x
+            );
+
+
+        const distance=
+            Math.hypot(
+                player.x-enemy.x,
+                player.y-enemy.y
+            );
+
+
+        if(distance>210){
+
+            const nx=
+                enemy.x+
+                Math.cos(angle)*
+                enemy.speed*
+                delta*.07;
+
+
+            const ny=
+                enemy.y+
+                Math.sin(angle)*
+                enemy.speed*
+                delta*.07;
+
+
+            if(
+                !collidesObstacle(
+                    nx,
+                    enemy.y,
+                    enemy.radius
+                )
+            ){
+
+                enemy.x=nx;
+
+            }
+
+
+            if(
+                !collidesObstacle(
+                    enemy.x,
+                    ny,
+                    enemy.radius
+                )
+            ){
+
+                enemy.y=ny;
+
+            }
+
+        }
+
+
+        if(
+            distance<550 &&
+            time-
+            enemy.lastShot>
+            enemy.shootCooldown
+        ){
+
+            enemy.lastShot=time;
+
+
+            bullets.push({
+
+                x:enemy.x,
+
+                y:enemy.y,
+
+                vx:
+                    Math.cos(angle)*
+                    4.5,
+
+                vy:
+                    Math.sin(angle)*
+                    4.5,
+
+                radius:6,
+
+                damage:
+                    enemy.damage,
+
+                friendly:false,
+
+                life:2400
+
+            });
+
+        }
+
+    });
+
+}
+
+
+/* ==================================================
+BULLETS
+================================================== */
+
+function updateBullets(
+    delta
+){
+
+    for(
+        let i=
+            bullets.length-1;
+        i>=0;
+        i--
+    ){
+
+        let bullet=
+            bullets[i];
+
+
+        bullet.x+=
+            bullet.vx*
+            delta*.11;
+
+
+        bullet.y+=
+            bullet.vy*
+            delta*.11;
+
+
+        bullet.life-=delta;
+
+
+        if(
+            bullet.life<=0 ||
+            bullet.x<0 ||
+            bullet.y<0 ||
+            bullet.x>canvas.width ||
+            bullet.y>canvas.height ||
+            collidesObstacle(
+                bullet.x,
+                bullet.y,
+                bullet.radius
+            )
+        ){
+
+            bullets.splice(
+                i,
+                1
+            );
+
+            continue;
+
+        }
+
+
+        if(
+            bullet.friendly
+        ){
+
+            let hit=false;
+
+
+            for(
+                let e=
+                    enemies.length-1;
+                e>=0;
+                e--
+            ){
+
+                const enemy=
+                    enemies[e];
+
+
+                const dist=
+                    Math.hypot(
+
+                        bullet.x-
+                        enemy.x,
+
+                        bullet.y-
+                        enemy.y
+
+                    );
+
+
+                if(
+                    dist<
+                    bullet.radius+
+                    enemy.radius
+                ){
+
+                    enemy.hp-=
+                        bullet.damage;
+
+
+                    player.superCharge+=
+                        18;
+
+
+                    createParticles(
+                        bullet.x,
+                        bullet.y,
+                        8
+                    );
+
+
+                    bullets.splice(
+                        i,
+                        1
+                    );
+
+
+                    hit=true;
+
+
+                    if(
+                        enemy.hp<=0
+                    ){
+
+                        enemies.splice(
+                            e,
+                            1
+                        );
+
+                        enemyDefeated();
+
+                    }
+
+
+                    break;
+
+                }
+
+            }
+
+
+            if(hit)continue;
+
+        }
+
+        else{
+
+            const dist=
+                Math.hypot(
+
+                    bullet.x-
+                    player.x,
+
+                    bullet.y-
+                    player.y
+
+                );
+
+
+            if(
+                dist<
+                bullet.radius+
+                player.radius
+            ){
+
+                bullets.splice(
+                    i,
+                    1
+                );
+
+
+                if(
+                    player.invincible<=0
+                ){
+
+                    player.hp-=
+                        bullet.damage;
+
+                    player.invincible=
+                        300;
+
+
+                    createParticles(
+                        player.x,
+                        player.y,
+                        12
+                    );
+
+
+                    if(
+                        player.hp<=0
+                    ){
+
+                        loseBattle();
+
+                        return;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    player.superCharge=
+        Math.min(
+            100,
+            player.superCharge
+        );
+
+
+    updateBattleUI();
+
+}
+
+
+/* ==================================================
+ENEMY DEFEATED
+================================================== */
+
+function enemyDefeated(){
+
+    battleKills++;
+
+    playerData.quests.kill10++;
+
+    player.hp=
+        Math.min(
+            player.maxHp,
+            player.hp+
+            player.maxHp*.08
+        );
+
+
+    createParticles(
+        player.x,
+        player.y,
+        15
+    );
+
+
+    updateBattleUI();
+
+}
+
+
+/* ==================================================
+SUPER
+================================================== */
+
+function useSuper(){
+
+    if(
+        !running ||
+        !player ||
+        player.superCharge<
+        100
+    ){
+
+        return;
+
+    }
+
+
+    player.superCharge=0;
+
+
+    const range=250;
+
+
+    enemies.forEach(
+        enemy=>{
+
+            const dist=
+                Math.hypot(
+
+                    enemy.x-
+                    player.x,
+
+                    enemy.y-
+                    player.y
+
+                );
+
+
+            if(dist<range){
+
+                enemy.hp-=
+                    player.damage*
+                    2.6;
+
+            }
+
+        }
+    );
+
+
+    for(
+        let i=
+            enemies.length-1;
+        i>=0;
+        i--
+    ){
+
+        if(
+            enemies[i].hp<=0
+        ){
+
+            enemies.splice(
+                i,
+                1
+            );
+
+            enemyDefeated();
+
+        }
+
+    }
+
+
+    for(
+        let i=0;
+        i<60;
+        i++
+    ){
+
+        const angle=
+            Math.random()*
+            Math.PI*
+            2;
+
+
+        particles.push({
+
+            x:player.x,
+
+            y:player.y,
+
+            vx:
+                Math.cos(angle)*
+                (
+                    2+
+                    Math.random()*5
+                ),
+
+            vy:
+                Math.sin(angle)*
+                (
+                    2+
+                    Math.random()*5
+                ),
+
+            life:
+                400+
+                Math.random()*500,
+
+            size:
+                3+
+                Math.random()*6
+
+        });
+
+    }
+
+
+    updateBattleUI();
+
+}
+
+
+/* ==================================================
+COLLISION
+================================================== */
+
+function collidesObstacle(
+    x,
+    y,
+    radius
+){
+
+    return obstacles.some(
+        o=>
+
+        x+radius>o.x
+        &&
+        x-radius<
+            o.x+o.width
+        &&
+        y+radius>o.y
+        &&
+        y-radius<
+            o.y+o.height
+    );
+
+}
+
+
+/* ==================================================
+PARTICLES
+================================================== */
+
+function createParticles(
+    x,
+    y,
+    count
+){
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        particles.push({
+
+            x,
+            y,
+
+            vx:
+                (
+                    Math.random()-.5
+                )*6,
+
+            vy:
+                (
+                    Math.random()-.5
+                )*6,
+
+            life:
+                300+
+                Math.random()*400,
+
+            size:
+                2+
+                Math.random()*5
+
+        });
+
+    }
+
+}
+
+
+function updateParticles(
+    delta
+){
+
+    for(
+        let i=
+            particles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p=
+            particles[i];
+
+
+        p.x+=
+            p.vx*
+            delta*.07;
+
+
+        p.y+=
+            p.vy*
+            delta*.07;
+
+
+        p.life-=delta;
+
+
+        if(p.life<=0){
+
+            particles.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ==================================================
+DRAW
+================================================== */
+
+function drawBattle(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    drawArena();
+
+    drawObstacles();
+
+    drawBullets();
+
+    drawEnemies();
+
+    drawPlayer();
+
+    drawParticles();
+
+}
+
+
+/* ==================================================
+ARENA BACKGROUND
+================================================== */
+
+function drawArena(){
+
+    ctx.fillStyle=
+        "#28835b";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    ctx.fillStyle=
+        "rgba(255,255,255,.035)";
+
+
+    const size=60;
+
+
+    for(
+        let x=0;
+        x<canvas.width;
+        x+=size
+    ){
+
+        for(
+            let y=0;
+            y<canvas.height;
+            y+=size
+        ){
+
+            if(
+                (
+                    x/size+
+                    y/size
+                )%2===0
+            ){
+
+                ctx.fillRect(
+                    x,
+                    y,
+                    size,
+                    size
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* ==================================================
+OBSTACLE DRAW
+================================================== */
+
+function drawObstacles(){
+
+    obstacles.forEach(o=>{
+
+        ctx.fillStyle=
+            "#31553e";
+
+        ctx.fillRect(
+            o.x+5,
+            o.y+7,
+            o.width,
+            o.height
+        );
+
+
+        ctx.fillStyle=
+            "#4c8257";
+
+        ctx.fillRect(
+            o.x,
+            o.y,
+            o.width,
+            o.height
+        );
+
+
+        ctx.strokeStyle=
+            "#27462f";
+
+        ctx.lineWidth=4;
+
+        ctx.strokeRect(
+            o.x,
+            o.y,
+            o.width,
+            o.height
+        );
+
+    });
+
+}
+
+
+/* ==================================================
+PLAYER DRAW
+================================================== */
+
+function drawPlayer(){
+
+    const skinId=
+        playerData
+        .characters[
+            player.character.id
+        ]
+        .skin;
+
+
+    const skin=
+        skins.find(
+            s=>
+            s.id===skinId
+        );
+
+
+    ctx.save();
+
+
+    if(
+        player.invincible>0 &&
+        Math.floor(
+            player.invincible/60
+        )%2===0
+    ){
+
+        ctx.globalAlpha=.4;
+
+    }
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        player.x,
+        player.y,
+        player.radius+7,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=
+        "#2bb5ff";
+
+    ctx.fill();
+
+
+    ctx.font=
+        "38px Arial";
+
+    ctx.textAlign=
+        "center";
+
+    ctx.textBaseline=
+        "middle";
+
+
+    ctx.fillText(
+        skin
+        ? skin.emoji
+        : player.character.emoji,
+
+        player.x,
+        player.y
+    );
+
+
+    ctx.restore();
+
+
+    drawHealthBar(
+        player.x,
+        player.y-
+        38,
+        player.hp,
+        player.maxHp,
+        "#49e76c"
+    );
+
+}
+
+
+/* ==================================================
+ENEMY DRAW
+================================================== */
+
+function drawEnemies(){
+
+    enemies.forEach(
+        enemy=>{
+
+            ctx.beginPath();
+
+            ctx.arc(
+                enemy.x,
+                enemy.y,
+                enemy.radius+5,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle=
+                "#e84c50";
+
+            ctx.fill();
+
+
+            ctx.font=
+                "34px Arial";
+
+            ctx.textAlign=
+                "center";
+
+            ctx.textBaseline=
+                "middle";
+
+            ctx.fillText(
+                enemy.emoji,
+                enemy.x,
+                enemy.y
+            );
+
+
+            drawHealthBar(
+                enemy.x,
+                enemy.y-35,
+                enemy.hp,
+                enemy.maxHp,
+                "#ff5151"
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+HEALTH BAR
+================================================== */
+
+function drawHealthBar(
+    x,
+    y,
+    hp,
+    maxHp,
+    color
+){
+
+    const width=55;
+
+    const height=7;
+
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.7)";
+
+    ctx.fillRect(
+        x-width/2,
+        y,
+        width,
+        height
+    );
+
+
+    ctx.fillStyle=
+        color;
+
+
+    ctx.fillRect(
+        x-width/2,
+        y,
+        width*
+        Math.max(
+            0,
+            hp/maxHp
+        ),
+        height
+    );
+
+}
+
+
+/* ==================================================
+BULLET DRAW
+================================================== */
+
+function drawBullets(){
+
+    bullets.forEach(
+        bullet=>{
+
+            ctx.beginPath();
+
+            ctx.arc(
+                bullet.x,
+                bullet.y,
+                bullet.radius,
+                0,
+                Math.PI*2
+            );
+
+
+            ctx.fillStyle=
+                bullet.friendly
+                ?
+                "#ffe94a"
+                :
+                "#ff4f6d";
+
+
+            ctx.fill();
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+PARTICLE DRAW
+================================================== */
+
+function drawParticles(){
+
+    particles.forEach(
+        p=>{
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.size,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle=
+                "rgba(255,235,90,.8)";
+
+            ctx.fill();
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+BATTLE UI
+================================================== */
+
+function updateBattleUI(){
+
+    if(!player)return;
+
+
+    document.getElementById(
+        "battleScore"
+    ).innerHTML=
+
+        "💀 "+
+        battleKills+
+        " / "+
+        maxEnemies+
+        "&nbsp;&nbsp; ❤️ "+
+        Math.max(
+            0,
+            Math.ceil(
+                player.hp
+            )
+        );
+
+
+    const superBtn=
+        document.getElementById(
+            "superButton"
+        );
+
+
+    superBtn.innerHTML=
+
+        "SUPER<br>"+
+        Math.floor(
+            player.superCharge
+        )+
+        "%";
+
+
+    if(
+        player.superCharge>=100
+    ){
+
+        superBtn.classList.add(
+            "ready"
+        );
+
+    }else{
+
+        superBtn.classList.remove(
+            "ready"
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+WIN
+================================================== */
+
+function winBattle(){
+
+    if(!running)return;
+
+    running=false;
+
+
+    const trophyReward=
+        8+
+        Math.floor(
+            Math.random()*4
+        );
+
+
+    const coinReward=
+        30+
+        Math.floor(
+            Math.random()*31
+        );
+
+
+    playerData.trophies+=
+        trophyReward;
+
+
+    const info=
+        playerData
+        .characters[
+            playerData
+            .selectedCharacter
+        ];
+
+
+    info.trophies+=
+        trophyReward;
+
+
+    playerData.coins+=
+        coinReward;
+
+
+    addXP(35);
+
+
+    playerData
+        .quests
+        .win1++;
+
+
+    if(
+        Math.random()<.35
+    ){
+
+        playerData.drops++;
+
+    }
+
+
+    saveGame();
+
+
+    setTimeout(
+        ()=>{
+
+            alert(
+
+                "VICTORY! 🏆\n\n"+
+                "+"+
+                trophyReward+
+                " trophies\n"+
+                "+"+
+                coinReward+
+                " coins\n"+
+                "+35 XP"
+
+            );
+
+
+            endBattle();
+
+        },
+        100
+    );
+
+}
+
+
+/* ==================================================
+LOSE
+================================================== */
+
+function loseBattle(){
+
+    if(!running)return;
+
+    running=false;
+
+
+    const info=
+        playerData
+        .characters[
+            playerData
+            .selectedCharacter
+        ];
+
+
+    const loss=
+        Math.min(
+            4,
+            info.trophies
+        );
+
+
+    info.trophies-=loss;
+
+    playerData.trophies=
+        Math.max(
+            0,
+            playerData.trophies-
+            loss
+        );
+
+
+    addXP(10);
+
+
+    saveGame();
+
+
+    setTimeout(
+        ()=>{
+
+            alert(
+
+                "DEFEAT 💀\n\n"+
+                "-"+
+                loss+
+                " trophies\n"+
+                "+10 XP"
+
+            );
+
+
+            endBattle();
+
+        },
+        100
+    );
+
+}
+
+
+/* ==================================================
+END BATTLE
+================================================== */
+
+function endBattle(){
+
+    running=false;
+
+
+    document
+        .getElementById(
+            "battleScreen"
+        )
+        .classList.add(
+            "hidden"
+        );
+
+
+    document
+        .getElementById(
+            "homeScreen"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
+
+    updateHome();
+
+}
+
+
+/* ==================================================
+TOAST
+================================================== */
+
+function showToast(
+    message
+){
+
+    const toast=
+        document.createElement(
+            "div"
+        );
+
+
+    toast.textContent=
+        message;
+
+
+    toast.style.position=
+        "fixed";
+
+    toast.style.top=
+        "110px";
+
+    toast.style.left=
+        "50%";
+
+    toast.style.transform=
+        "translateX(-50%)";
+
+    toast.style.background=
+        "#10152c";
+
+    toast.style.border=
+        "3px solid white";
+
+    toast.style.borderRadius=
+        "14px";
+
+    toast.style.padding=
+        "14px 25px";
+
+    toast.style.fontWeight=
+        "bold";
+
+    toast.style.zIndex=
+        "9999";
+
+    toast.style.boxShadow=
+        "0 8px 25px rgba(0,0,0,.5)";
+
+
+    document.body.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        ()=>{
+
+            toast.remove();
+
+        },
+        1800
+    );
+
+}
+
+
+/* ==================================================
+MOBILE TOUCH CONTROLS
+================================================== */
+
+let touchStart=null;
+
+
+canvasTouchSetup();
+
+
+function canvasTouchSetup(){
+
+    document.addEventListener(
+        "touchstart",
+        e=>{
+
+            if(
+                !running
+            )return;
+
+
+            const touch=
+                e.touches[0];
+
+
+            touchStart={
+
+                x:touch.clientX,
+
+                y:touch.clientY
+
+            };
+
+
+            mouse.x=
+                touch.clientX;
+
+            mouse.y=
+                touch.clientY;
+
+
+            if(
+                touch.clientX>
+                window.innerWidth/2
+            ){
+
+                mouse.down=true;
+
+            }
+
+        },
+        {
+            passive:false
+        }
+    );
+
+
+    document.addEventListener(
+        "touchmove",
+        e=>{
+
+            if(
+                !running ||
+                !touchStart
+            )return;
+
+
+            e.preventDefault();
+
+
+            const touch=
+                e.touches[0];
+
+
+            if(
+                touchStart.x<
+                window.innerWidth/2
+            ){
+
+                const dx=
+                    touch.clientX-
+                    touchStart.x;
+
+
+                const dy=
+                    touch.clientY-
+                    touchStart.y;
+
+
+                keys["a"]=
+                    dx<-20;
+
+                keys["d"]=
+                    dx>20;
+
+                keys["w"]=
+                    dy<-20;
+
+                keys["s"]=
+                    dy>20;
+
+            }
+
+            else{
+
+                mouse.x=
+                    touch.clientX;
+
+                mouse.y=
+                    touch.clientY;
+
+                mouse.down=true;
+
+            }
+
+        },
+        {
+            passive:false
+        }
+    );
+
+
+    document.addEventListener(
+        "touchend",
+        ()=>{
+
+            touchStart=null;
+
+            mouse.down=false;
+
+            keys["a"]=false;
+            keys["d"]=false;
+            keys["w"]=false;
+            keys["s"]=false;
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+START GAME
+================================================== */
+
+loadGame();
+
+updateHome();
+
+</script>
+
+</body>
+</html>
